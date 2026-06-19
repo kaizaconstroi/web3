@@ -1,34 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, LOCALE_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table';
-
-import { TooltipModule } from 'primeng/tooltip';
-import { LoginFormComponent } from './security/login-form/login-form.component';
-import { ActivitiesListComponent } from './activities/activities-list/activities-list.component';
 import { AuthService } from './security/auth.service';
+import { HttpClientModule } from '@angular/common/http';
+import { NavbarComponent } from './core/navbar/navbar.component';
+import { ToastModule} from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { registerLocaleData } from '@angular/common';
+
+import localePt from '@angular/common/locales/pt';
+import { ErrorHandlerService } from './core/error-handler.service';
+
+registerLocaleData(localePt);
+
 @Component({
   selector: 'app-root',
   standalone: true,
- imports: [
+  imports: [
     RouterOutlet,
-    ActivitiesListComponent,
-    LoginFormComponent
+    HttpClientModule,
+    NavbarComponent,
+    ToastModule,
+    ConfirmDialogModule
   ],
   providers: [
-    AuthService
+    AuthService,
+    MessageService,
+    ConfirmationService,
+    ErrorHandlerService,
+    { provide: LOCALE_ID, useValue: 'pt-BR' }
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'ifitness-ui';
-
-  activities = [
-    { type: 'CORRIDA', activity_date: '27/05/2025', distance: 8.0, duration: 42, user: 'Fernando Duarte' },
-    { type: 'CORRIDA', activity_date: '28/05/2025', distance: 8.0, duration: 43, user: 'Fernando Duarte' },
-    { type: 'CAMINHADA', activity_date: '28/05/2025', distance: 5.0, duration: 55, user: 'Juliana Silva' }
-  ];
+  title = 'ifitness-ui2';
 
 }

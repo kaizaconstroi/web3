@@ -6,15 +6,21 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ActivityService } from '../activity.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ErrorHandlerService } from '../../core/error-handler.service';
+import { RouterModule } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-activities-list',
   standalone: true,
-  imports: [
+   imports: [
     CommonModule,
     ButtonModule,
     TableModule,
-    TooltipModule
+    TooltipModule,
+    RouterModule
+   ],
+    providers:[
+    Title
   ],
   templateUrl: './activities-list.component.html',
   styleUrl: './activities-list.component.css'
@@ -27,12 +33,15 @@ export class ActivitiesListComponent {
     private activityService: ActivityService,
     private confirmation: ConfirmationService,
     private messageService: MessageService,
-    private errorHandler: ErrorHandlerService
-  ){ }
+    private errorHandler: ErrorHandlerService,
+    private title: Title
+  ){}
 
   ngOnInit(): void {
+    this.title.setTitle('Listagem de Atividades');
     this.list();
   }
+
 
   list(): void {
     this.activityService.listByUser()

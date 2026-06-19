@@ -33,6 +33,10 @@ export class ErrorHandlerService {
       msg = 'Erro ao processar serviço remoto. Tente novamente.';
       console.error('Ocorreu um erro', errorResponse);
     }
+    if (errorResponse.status === 404) {
+        msg = 'Nenhuma atividade cadastrada.';
+      }
+
 
     this.messageService.add({ severity: 'error', detail: msg });
   }

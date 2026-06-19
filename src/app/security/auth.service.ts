@@ -9,6 +9,7 @@ import { firstValueFrom } from 'rxjs';
 export class AuthService {
 
   oauthTokenUrl = 'http://localhost:8080/auth/login';
+  refreshTokenUrl = 'http://localhost:8080/auth/refresh';
   jwtPayload: any;
 
   constructor(
@@ -39,6 +40,35 @@ export class AuthService {
       }
       return Promise.reject(response);
     };
+  }
+
+  isInvalidAccessToken(): boolean {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return true;
+    }
+    return this.jwtHelper.isTokenExpired(token);
+  }
+
+  async getNewAccessToken(): Promise<void> {
+    const headers = new HttpHeaders()
+      .append('Content-Type', 'application/json');
+
+    try {
+      const response: any = await firstValueFrom(
+        this.http.post(this.refreshTokenUrl, {}, { headers })
+      );
+      this.storeToken(response['accessToken']);
+    } catch (error: any) {
+      console.error('Falha ao renovar token', error);
+      this.logout();
+      return Promise.reject(error);
+    }
+  }
+
+  private logout(): void {
+    localStorage.removeItem('token');
+    this.jwtPayload = null;
   }
 
   private storeToken(token: string): void {
